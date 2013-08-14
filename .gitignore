@@ -40,6 +40,8 @@ app/assets/.DS_Store
 
 app/assets/images/.DS_Store
 
+test/.DS_Store
+
 # RubyMine cruft
 
 .idea/
