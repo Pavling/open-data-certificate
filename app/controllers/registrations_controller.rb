@@ -6,15 +6,15 @@ class RegistrationsController < Devise::RegistrationsController
       @surveys = Survey.available_to_complete
       super
     else
-      raise ActionController::RoutingError.new('Not Found') 
+      raise ActionController::RoutingError.new('Not Found')
     end
   end
-  
+
   def update
     @surveys = Survey.available_to_complete
     super
   end
-  
+
   def redirect
     id = current_user.id
     redirect_to edit_user_registration_path id
