@@ -162,32 +162,19 @@ class ResponseSetTest < ActiveSupport::TestCase
     assert_equal response_set.triggered_requirements, [requirement]
   end
 
-  test '#responses_with_url_type calls the url type responses' do
+  # Test all_urls_resolve method
+  test '#all_urls_resolve? ' do
+
+
     @question = FactoryGirl.create :question
     @answer1 = FactoryGirl.create :answer, input_type: 'url'
-    @response_set1 = FactoryGirl.create(:response_set)
+    @response_set = FactoryGirl.create(:response_set)
 
-    @response1 = FactoryGirl.create :response, response_set: @response_set1, question: @question, answer: @answer1, string_value: 'test.com'
-    assert_equal @response1, @response_set1.responses_with_url_type.first
+    @response1 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'http://google.com'
+    assert_equal true, @response_set.all_urls_resolve?
+
 
   end
-
-  # Test all_urls_resolve method
-  # test '#all_urls_resolve? ' do
-  #   # add two questions, one to be the certificate
-  #   HTTParty.stubs(:get) {200}
-
-
-  #   @question = FactoryGirl.create :question
-  #   @answer1 = FactoryGirl.create :answer, input_type: 'url'
-  #   @response_set1 = FactoryGirl.create(:response_set)
-
-  #   @response1 = FactoryGirl.create :response, response_set: @response_set1, question: @question, answer: @answer1, string_value: 'test.com'
-  #   # binding.pry
-  #   assert_equal true, @response_set1.all_urls_resolve?
-
-
-  # end
 
   test "#attained_level returns the correct string for the level achieved" do
     %w(none basic pilot standard exemplar).each_with_index do |level, i|
