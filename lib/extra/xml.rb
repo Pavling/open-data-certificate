@@ -1,6 +1,8 @@
 require 'rss'
 
-class XML
+
+
+class XMLFeed
 
   # Atom class, which will handle all xml parsing/converting, or whatever features
   # are needed.
@@ -12,9 +14,7 @@ class XML
     # *************************************************************************************
     def self.dataset_to_feed(dataset,atom_url)
       # Makes sure is dataset.
-      if(dataset.class != Dataset)
-        return nil
-      end
+      return nil if(dataset.class != Dataset)
       dataset_url = atom_url
       dataset_url=chop_url(dataset_url)
       certificates=dataset.certificates.where(:published => true).by_newest
@@ -37,7 +37,7 @@ class XML
           end
         end
      end
-      return @rss
+     return @rss
     end
 
 
@@ -52,3 +52,4 @@ class XML
 
   end
 end
+
