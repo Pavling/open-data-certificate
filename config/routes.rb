@@ -22,9 +22,9 @@ OpenDataCertificate::Application.routes.draw do
     get 'certificates/latest', to: 'certificates#latest', as: 'latest'
     get 'certificates/latest/:type', to: 'certificates#latest', as: 'latest'
 
-    # Added by The-Skas @ GA
+
     get '/to_atom', to: 'datasets#to_atom'
-    ######################
+
     resources :certificates, :only => [:show] do
        member do
          get 'improvements', to: 'certificates#improvements', as: 'improvements'
