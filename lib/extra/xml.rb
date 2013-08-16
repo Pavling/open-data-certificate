@@ -23,9 +23,9 @@ class XML
         user = dataset.user
         maker.channel.author =  "#{user.first_name} #{user.last_name}"
         maker.channel.updated = dataset.updated_at.to_s
-        maker.channel.id = atom_url
-        maker.channel.title = dataset.title
-        maker.channel.link = dataset.documentation_url
+        maker.channel.id = atom_url.to_s
+        maker.channel.title = dataset.title.to_s
+        maker.channel.link = dataset.documentation_url.to_s
 
         certificates.each do |certificate|
           maker.items.new_item do |item|
