@@ -173,11 +173,15 @@ class ResponseSetTest < ActiveSupport::TestCase
     @response2 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'http://google.co.uk'
     @response3 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'http://facebook.com'
 
+    stub(:get_response_code) {200}
+
     # Assert test passes valid URLs
     assert_equal true, @response_set.all_urls_resolve?
 
     @response4 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'facebook.com'
     @response5 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'http://face'
+
+    stub(:get_response_code) {404}
 
     # Assert test fails invalid URLs
     assert_equal false, @response_set.all_urls_resolve?
