@@ -163,16 +163,24 @@ class ResponseSetTest < ActiveSupport::TestCase
   end
 
   # Test all_urls_resolve method
-  test '#all_urls_resolve? ' do
-
+  test '#all_urls_resolve? returns true for valid urls and false for invalid urls' do
 
     @question = FactoryGirl.create :question
-    @answer1 = FactoryGirl.create :answer, input_type: 'url'
     @response_set = FactoryGirl.create(:response_set)
 
+    @answer1 = FactoryGirl.create :answer, input_type: 'url'
     @response1 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'http://google.com'
+    @response2 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'http://google.co.uk'
+    @response3 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'http://facebook.com'
+
+    # Assert test passes valid URLs
     assert_equal true, @response_set.all_urls_resolve?
 
+    @response4 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'facebook.com'
+    @response5 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'http://face'
+
+    # Assert test fails invalid URLs
+    assert_equal false, @response_set.all_urls_resolve?
 
   end
 
