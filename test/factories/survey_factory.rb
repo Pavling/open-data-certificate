@@ -17,6 +17,18 @@ FactoryGirl.define do
       FactoryGirl.create_list(:survey_section, 3, survey: survey)
     end
 
+    factory :survey_with_mandatory_question do |survey|
+      after(:create) do |survey, evaluator|
+        FactoryGirl.create(:survey_section_with_mandatory_question, survey: survey)
+      end
+    end
+
+    factory :survey_with_required_question do |survey|
+      after(:create) do |survey, evaluator|
+        FactoryGirl.create(:survey_section_with_required_question, survey: survey)
+      end
+    end
+
   end
 
   sequence :unique_survey_access_code do |n|

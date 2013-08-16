@@ -17,6 +17,10 @@ FactoryGirl.define do
                                   # q.display_type            {} # nil is default
     q.is_mandatory false
                                   # q.display_width           {}
+    factory :mandatory_question do |q|
+      q.is_mandatory true
+    end
+    
     q.correct_answer_id nil
 
     q.text_as_statement "Favourite Color"
