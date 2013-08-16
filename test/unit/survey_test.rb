@@ -19,5 +19,19 @@ class SurveyTest < ActiveSupport::TestCase
     assert survey.superceded?
   end
 
+  test "#mandatory_questions returns array of mandatory questions for survey" do
+    survey = FactoryGirl.create :survey_with_mandatory_question
+
+    assert_equal survey.mandatory_questions.count, 1
+    assert_equal survey.mandatory_questions.first.is_mandatory, true
+  end
+
+  test "#requirements returns array of required questions for survey" do
+    survey = FactoryGirl.create :survey_with_required_question
+
+    assert_equal survey.requirements.count, 1
+    assert survey.requirements.first.requirement.size > 0
+  end
+
 
 end
