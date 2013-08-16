@@ -12,7 +12,6 @@ class CertificatesController < ApplicationController
         raise ActiveRecord::RecordNotFound
       end
     end
-    
     respond_to do |format|
       format.html
       format.json
@@ -77,7 +76,7 @@ class CertificatesController < ApplicationController
       format.any(:png, :html) { send_data(@certificate.badge_file.read, :type => "image/png", :disposition => 'inline') }
     end
   end
-  
+
   def get_badge
     params[:datasetUrl] ||= request.env['HTTP_REFERER']
     unless params[:datasetUrl].nil?

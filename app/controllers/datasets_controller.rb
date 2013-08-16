@@ -1,3 +1,4 @@
+require 'rss'
 class DatasetsController < ApplicationController
   load_and_authorize_resource
 
@@ -24,4 +25,12 @@ class DatasetsController < ApplicationController
     @dataset = Dataset.find(params[:id])
     @certificates = @dataset.certificates.where(:published => true).by_newest
   end
-end
+
+  def to_atom
+    @dataset = Dataset.find(params[:dataset_id])
+
+      url = request.original_url
+      @rss=XML::Atom.dataset_to_feed(@dataset,url)
+      render xml: @rss.to_xml
+    end
+  end
