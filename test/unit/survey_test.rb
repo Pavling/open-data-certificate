@@ -28,7 +28,7 @@ class SurveyTest < ActiveSupport::TestCase
 
   test "#requirements returns array of required questions for survey" do
     survey = FactoryGirl.create :survey_with_required_question
-    binding.pry
+
     assert_equal survey.requirements.count, 1
     assert survey.requirements.first.requirement.size > 0
   end
