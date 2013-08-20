@@ -31,8 +31,8 @@ class ResponseSetTest < ActiveSupport::TestCase
     @response_set = FactoryGirl.create :response_set
 
     # answer the questions
-    @response_1 = FactoryGirl.create :response, response_set: @response_set, 
-                                     :question => @q1, :answer => @a1 
+    @response_1 = FactoryGirl.create :response, response_set: @response_set,
+                                     :question => @q1, :answer => @a1
 
 
     @responses = @response_set.responses_for_questions [@q1]
@@ -162,6 +162,32 @@ class ResponseSetTest < ActiveSupport::TestCase
     assert_equal response_set.triggered_requirements, [requirement]
   end
 
+  # Test all_urls_resolve method
+  test '#all_urls_resolve? returns true for valid urls and false for invalid urls' do
+
+    @question = FactoryGirl.create :question
+    @response_set = FactoryGirl.create(:response_set)
+
+    @answer1 = FactoryGirl.create :answer, input_type: 'url'
+    @response1 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'http://google.com'
+    @response2 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'http://google.co.uk'
+    @response3 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'http://facebook.com'
+
+    stub(:get_response_code) {200}
+
+    # Assert test passes valid URLs
+    assert_equal true, @response_set.all_urls_resolve?
+
+    @response4 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'facebook.com'
+    @response5 = FactoryGirl.create :response, response_set: @response_set, question: @question, answer: @answer1, string_value: 'http://face'
+
+    stub(:get_response_code) {404}
+
+    # Assert test fails invalid URLs
+    assert_equal false, @response_set.all_urls_resolve?
+
+  end
+
   test "#attained_level returns the correct string for the level achieved" do
     %w(none basic pilot standard exemplar).each_with_index do |level, i|
       response_set = FactoryGirl.create(:response_set)
@@ -247,7 +273,7 @@ class ResponseSetTest < ActiveSupport::TestCase
 
     assert_equal expected_value, response_set.dataset_curator_determined_from_responses
   end
-  
+
   test "#dataset_documentation_url_determined_from_responses returns the answer of the response to the question referenced as 'documentationUrl'" do
     question = FactoryGirl.create(:question, reference_identifier: 'testDocumentationUrl')
     answer = FactoryGirl.create(:answer, question: question)
@@ -257,7 +283,7 @@ class ResponseSetTest < ActiveSupport::TestCase
 
     assert_equal expected_value, response_set.dataset_documentation_url_determined_from_responses
   end
-  
+
   test "#data_licence_determined_from_responses returns 'Not applicable' when the data licence is not applicable" do
     question = FactoryGirl.create(:question, reference_identifier: 'dataLicence')
     answer = FactoryGirl.create(:answer, question: question, reference_identifier: "na")
@@ -267,10 +293,10 @@ class ResponseSetTest < ActiveSupport::TestCase
     }
     response_set = FactoryGirl.create(:response_set, survey: question.survey_section.survey)
     response = FactoryGirl.create(:response, response_set: response_set, question: question, answer: answer)
-  
+
     assert_equal expected_value, response_set.data_licence_determined_from_responses
   end
-  
+
   test "#content_licence_determined_from_responses returns 'Not applicable' when the content licence is not applicable" do
     question = FactoryGirl.create(:question, reference_identifier: 'contentLicence')
     answer = FactoryGirl.create(:answer, question: question, reference_identifier: "na")
@@ -280,10 +306,10 @@ class ResponseSetTest < ActiveSupport::TestCase
     }
     response_set = FactoryGirl.create(:response_set, survey: question.survey_section.survey)
     response = FactoryGirl.create(:response, response_set: response_set, question: question, answer: answer)
-  
+
     assert_equal expected_value, response_set.content_licence_determined_from_responses
   end
-  
+
   test "#data_licence_determined_from_responses returns the correct response when the data licence is a standard licence" do
     question = FactoryGirl.create(:question, reference_identifier: 'dataLicence')
     answer = FactoryGirl.create(:answer, question: question, reference_identifier: "uk_ogl")
@@ -293,10 +319,10 @@ class ResponseSetTest < ActiveSupport::TestCase
     }
     response_set = FactoryGirl.create(:response_set, survey: question.survey_section.survey)
     response = FactoryGirl.create(:response, response_set: response_set, question: question, answer: answer)
-  
+
     assert_equal expected_value, response_set.data_licence_determined_from_responses
   end
-  
+
   test "#content_licence_determined_from_responses returns the correct response when the content licence is a standard licence" do
     question = FactoryGirl.create(:question, reference_identifier: 'contentLicence')
     answer = FactoryGirl.create(:answer, question: question, reference_identifier: "uk_ogl")
@@ -306,19 +332,19 @@ class ResponseSetTest < ActiveSupport::TestCase
     }
     response_set = FactoryGirl.create(:response_set, survey: question.survey_section.survey)
     response = FactoryGirl.create(:response, response_set: response_set, question: question, answer: answer)
-  
+
     assert_equal expected_value, response_set.content_licence_determined_from_responses
   end
-  
+
   test "#data_licence_determined_from_responses returns the correct response when the data licence is a non-standard licence" do
     other_data_name_question = FactoryGirl.create(:question, reference_identifier: 'otherDataLicenceName')
     other_data_name_answer = FactoryGirl.create(:answer, question: other_data_name_question)
     other_data_name = 'A made up licence'
-    
+
     other_data_url_question = FactoryGirl.create(:question, reference_identifier: 'otherDataLicenceURL')
     other_data_url_answer = FactoryGirl.create(:answer, question: other_data_url_question)
     other_data_url = 'http://www.example.com/id/made-up-licence'
-    
+
     question = FactoryGirl.create(:question, reference_identifier: 'dataLicence')
     answer = FactoryGirl.create(:answer, question: question, reference_identifier: "other")
     expected_value = {
@@ -329,7 +355,7 @@ class ResponseSetTest < ActiveSupport::TestCase
     response = FactoryGirl.create(:response, response_set: response_set, question: question, answer: answer)
     other_data_name_response = FactoryGirl.create(:response, response_set: response_set, string_value: other_data_name, question: other_data_name_question, answer: other_data_name_answer)
     other_data_url_response = FactoryGirl.create(:response, response_set: response_set, string_value: other_data_url, question: other_data_url_question, answer: other_data_url_answer)
-  
+
     assert_equal expected_value, response_set.data_licence_determined_from_responses
   end
 

@@ -19,3 +19,26 @@ class ResponseTest < ActiveSupport::TestCase
   end
 
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

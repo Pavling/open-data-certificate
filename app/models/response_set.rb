@@ -91,7 +91,7 @@ class ResponseSet < ActiveRecord::Base
   end
 
   def data_licence_determined_from_responses
-    if @data_licence_determined_from_responses.nil? 
+    if @data_licence_determined_from_responses.nil?
       ref = value_for "data_licence", :reference_identifier
       case ref
       when "na"
@@ -114,9 +114,9 @@ class ResponseSet < ActiveRecord::Base
     end
     @data_licence_determined_from_responses
   end
-  
+
   def content_licence_determined_from_responses
-    if @content_licence_determined_from_responses.nil? 
+    if @content_licence_determined_from_responses.nil?
       ref = value_for "content_licence", :reference_identifier
       case ref
       when "na"
@@ -127,7 +127,7 @@ class ResponseSet < ActiveRecord::Base
       when "other"
          @content_licence_determined_from_responses = {
           :title => value_for("other_content_licence_name"),
-          :url   => value_for("other_content_licence_url") 
+          :url   => value_for("other_content_licence_url")
          }
       else
         licence = Odlifier::License.new(ref.dasherize)
@@ -174,14 +174,19 @@ class ResponseSet < ActiveRecord::Base
     responses.joins(:answer).where({:answers => {input_type: 'url'}}).readonly(false)
   end
 
+  def get_response_code(response)
+      response_code = Rails.cache.fetch(response.string_value)
+      if response_code.nil?
+        response_code = HTTParty.get(response.string_value).code rescue nil
+      end
+      return response_code
+  end
+
   def all_urls_resolve?
     errors = []
     responses_with_url_type.each do |response|
       if response.string_value
-        response_code = Rails.cache.fetch(response.string_value)
-        if response_code.nil?
-          response_code = HTTParty.get(response.string_value).code rescue nil
-        end
+        response_code = get_response_code(response)
         if response_code != 200
           response.error = true
           response.save
