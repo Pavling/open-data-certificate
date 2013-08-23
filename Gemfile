@@ -38,6 +38,7 @@ group :test do
 end
 
 group :development do
+  gem "factory_girl_rails", "~> 4.0"
   gem 'guard'
   gem 'guard-test'
   gem 'ruby-prof'
