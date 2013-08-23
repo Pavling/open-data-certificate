@@ -25,7 +25,7 @@ FactoryGirl.define do
     factory :untitled_dataset do
       title nil
     end
-    
+
     factory :dataset_without_documentation_url do
       documentation_url nil
     end
@@ -53,17 +53,17 @@ FactoryGirl.define do
 
   factory :survey do |s|
     meta_hash = {
-        dataset_title: 'testDataTitle', 
+        dataset_title: 'testDataTitle',
         dataset_curator: 'testPublisher',
         dataset_documentation_url: 'testDocumentationUrl'
       }
-    
+
     s.title "Simple survey"
     s.description "A simple survey for testing"
     s.access_code { FactoryGirl.generate :unique_survey_access_code }
     s.survey_version 0
     s.meta_map meta_hash
-  
+
     after(:create) do |survey, evaluator|
       FactoryGirl.create_list(:survey_section, 3, survey: survey)
     end
@@ -117,7 +117,7 @@ questions:
       qc.display_on_certificate true
     end
 
-    factory :requirement do
+    factory :required_question do
       requirement 'level_1'
       display_type 'label'
     end
@@ -138,7 +138,8 @@ questions:
   sequence(:answer_display_order) { |n| n }
 
   factory :answer do |a|
-    a.association :question # a.question_id               {}
+    a.association :question # a.question_id            {}
+
     a.text "My favorite color is clear"
     a.short_text "clear"
     a.help_text "Clear is the absense of color"
@@ -154,6 +155,12 @@ questions:
     # a.display_length            {}
     # a.custom_class              {}
     # a.custom_renderer           {}
+
+    factory :answer_with_requirement do |a|
+      a.requirement "pilot_2"
+    end
+
+
 
   end
 
